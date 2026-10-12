@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
-import { Moon, Sun, SunMoon } from 'lucide-react';
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
+import { Moon, Sun, SunMoon } from "lucide-react";
 
 export function ThemeToggle() {
   const { setTheme, theme } = useTheme();
@@ -20,10 +20,10 @@ export function ThemeToggle() {
     <div
       className="cursor-pointer"
       onClick={() => {
-        setTheme(theme === 'light' ? 'dark' : 'light');
+        setTheme(theme === "light" ? "dark" : "light");
       }}
     >
-      {theme === 'light' ? (
+      {theme === "light" ? (
         <Moon className="h-5 w-5 text-black" />
       ) : (
         <Sun className="h-5 w-5 text-white" color="white" />

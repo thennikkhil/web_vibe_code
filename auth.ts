@@ -1,10 +1,14 @@
-import NextAuth from 'next-auth';
-import { PrismaAdapter } from '@auth/prisma-adapter';
+import NextAuth from "next-auth"
+import { PrismaAdapter } from "@auth/prisma-adapter"
 
-import authConfig from './auth.config';
-import { db } from './lib/db';
-import { getAccountByUserId, getUserById } from './modules/auth/actions';
+import authConfig from "./auth.config"
+import { db } from "./lib/db";
+import { getAccountByUserId, getUserById } from "./modules/auth/actions";
 
+
+ 
+
+ 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   callbacks: {
     /**
@@ -25,20 +29,20 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
             email: user.email!,
             name: user.name,
             image: user.image,
-
-            // @ts-ignore
+           
             accounts: {
+              // @ts-ignore
               create: {
                 type: account.type,
                 provider: account.provider,
                 providerAccountId: account.providerAccountId,
-                refresh_token: account.refresh_token,
-                access_token: account.access_token,
-                expires_at: account.expires_at,
-                token_type: account.token_type,
+                refreshToken: account.refresh_token,
+                accessToken: account.access_token,
+                expiresAt: account.expires_at,
+                tokenType: account.token_type,
                 scope: account.scope,
-                id_token: account.id_token,
-                session_state: account.session_state as string | undefined,
+                idToken: account.id_token,
+                sessionState: account.session_state,
               },
             },
           },
@@ -81,10 +85,10 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     },
 
     async jwt({ token, user, account }) {
-      if (!token.sub) return token;
-      const existingUser = await getUserById(token.sub);
+      if(!token.sub) return token;
+      const existingUser = await getUserById(token.sub)
 
-      if (!existingUser) return token;
+      if(!existingUser) return token;
 
       const exisitingAccount = await getAccountByUserId(existingUser.id);
 
@@ -97,20 +101,20 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
 
     async session({ session, token }) {
       // Attach the user ID from the token to the session
-      if (token.sub && session.user) {
-        session.user.id = token.sub;
-      }
+    if(token.sub  && session.user){
+      session.user.id = token.sub
+    } 
 
-      if (token.sub && session.user) {
-        session.user.role = token.role;
-      }
+    if(token.sub && session.user){
+      session.user.role = token.role
+    }
 
-      return session;
+    return session;
     },
   },
-
+  
   secret: process.env.AUTH_SECRET,
   adapter: PrismaAdapter(db),
-  session: { strategy: 'jwt' },
+  session: { strategy: "jwt" },
   ...authConfig,
-});
+})
